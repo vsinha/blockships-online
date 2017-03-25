@@ -7,10 +7,6 @@ public class PlayerMovement : MonoBehaviour {
 	public float speed = 5.0f;
     private PhotonView player;
 
-    private Vector3 syncStartPosition = Vector3.zero;
-    private Vector3 syncEndPosition = Vector3.zero;
-
-   
     // Use this for initialization
     void Start () {
         player = GetComponent<PhotonView>();

@@ -47,14 +47,10 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Plugins\WebSocket\WebSocket.cs" />
-     <None Include="Assets\Photon Unity Networking\Demos\MarcoPolo-Tutorial\marcopolo-readme.txt" />
      <None Include="Assets\Photon Unity Networking\link.xml" />
      <None Include="Assets\Plugins\Photon3Unity3D.xml" />
      <None Include="Assets\Plugins\release_history.txt" />
-     <None Include="Assets\Photon Unity Networking\Demos\DemoBoxes\Resources\eurof_tt.txt" />
-     <None Include="Assets\Photon Unity Networking\Demos\DemoPickup\Assets\3dFont\3dText.shader" />
      <None Include="Assets\Photon Unity Networking\readme.txt" />
-     <None Include="Assets\Photon Unity Networking\Demos\DemoRockPaperScissors\Assets\OpenSans\Apache License.txt" />
      <None Include="Assets\Photon Unity Networking\changelog.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
@@ -74,11 +70,11 @@
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
- <Reference Include="websocket-sharp">
- <HintPath>C:/Users/viraj/Google Drive/unity/bs2_1/Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
- </Reference>
  <Reference Include="Photon3Unity3D">
- <HintPath>C:/Users/viraj/Google Drive/unity/bs2_1/Assets/Plugins/Photon3Unity3D.dll</HintPath>
+ <HintPath>C:/Users/viraj/Documents/unity/bs2_1/Assets/Plugins/Photon3Unity3D.dll</HintPath>
+ </Reference>
+ <Reference Include="websocket-sharp">
+ <HintPath>C:/Users/viraj/Documents/unity/bs2_1/Assets/Plugins/WebSocket/websocket-sharp.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
