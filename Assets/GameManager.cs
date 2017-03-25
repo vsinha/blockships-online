@@ -12,26 +12,21 @@ public class GameManager : Photon.PunBehaviour {
     /// <summary>
     /// Called when the local player left the room. We need to load the launcher scene.
     /// </summary>
-    public void OnLeftRoom() {
-        SceneManager.LoadScene(0);
+    public override void OnLeftRoom() {
+        SceneManager.LoadScene("Launcher");
     }
 
     public override void OnPhotonPlayerConnected(PhotonPlayer other) {
         Debug.Log("OnPhotonPlayerConnected() " + other.NickName); // not seen if you're the player connecting
 
-
         if (PhotonNetwork.isMasterClient) {
             Debug.Log("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient); // called before OnPhotonPlayerDisconnected
-
-
             LoadArena();
         }
     }
 
-
     public override void OnPhotonPlayerDisconnected(PhotonPlayer other) {
         Debug.Log("OnPhotonPlayerDisconnected() " + other.NickName); // seen when other disconnects
-
 
         if (PhotonNetwork.isMasterClient) {
             Debug.Log("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient); // called before OnPhotonPlayerDisconnected
@@ -46,11 +41,9 @@ public class GameManager : Photon.PunBehaviour {
 
     #region Public Methods
 
-
     public void LeaveRoom() {
         PhotonNetwork.LeaveRoom();
     }
-
 
     #endregion
 
@@ -64,7 +57,5 @@ public class GameManager : Photon.PunBehaviour {
         PhotonNetwork.LoadLevel("Room for " + PhotonNetwork.room.PlayerCount);
     }
 
-
     #endregion
-
 }

@@ -18,9 +18,9 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (player.isMine) {
+        //if (player.isMine) {
             InputMovement();
-        }
+        //}
     }
 
     // in an "observed" script:

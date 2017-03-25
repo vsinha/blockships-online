@@ -41,6 +41,8 @@ public class ShipAttach : MonoBehaviour {
 
         if (coll.gameObject.tag == "Block") {
 
+            Debug.Log("collided with block");
+
             // what attach direction are we closest to? (within a tolerance)
             Vector3 attachPoint = ClosestAttachPoint(coll.gameObject);
             int index = AttachPointIndex(attachPoint);

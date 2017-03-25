@@ -103,6 +103,16 @@ public class Launcher : Photon.PunBehaviour {
 
     public override void OnJoinedRoom() {
         Debug.Log("DemoAnimator/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+
+        // #Critical: We only load if we are the first player, else we rely on  PhotonNetwork.automaticallySyncScene to sync our instance scene.
+        if (PhotonNetwork.room.PlayerCount == 1) {
+            Debug.Log("We load the 'Room for 1' ");
+
+
+            // #Critical
+            // Load the Room Level. 
+            PhotonNetwork.LoadLevel("GameRoom");
+        }
     }
 
     public override void OnDisconnectedFromPhoton() {
