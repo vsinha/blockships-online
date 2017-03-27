@@ -17,13 +17,14 @@ public class BlockBehavior : MonoBehaviour {
 		
 	}
 
-    public void SetAttached() {
-        Destroy(rb);
+    public void SetAttached(GameObject parent) {
+        rb.isKinematic = true;
         //rb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
     
     public void SetDetached() {
-        rb = this.gameObject.AddComponent<Rigidbody2D>();
-        rb.constraints = originalConstraints;
+        rb.isKinematic = false;
+        //rb.WakeUp();
+        //rb.constraints = originalConstraints;
     }
 }

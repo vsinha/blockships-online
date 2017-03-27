@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\BlockBehavior.cs" />
+     <Compile Include="Assets\CameraWork.cs" />
      <Compile Include="Assets\GameManager.cs" />
      <Compile Include="Assets\Launcher.cs" />
      <Compile Include="Assets\NetworkManager.cs" />
@@ -127,7 +128,8 @@
      <Compile Include="Assets\PhotonChatApi\ChatState.cs" />
      <Compile Include="Assets\PhotonChatApi\ChatUserStatus.cs" />
      <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
-     <Compile Include="Assets\PlayerMovement.cs" />
+     <Compile Include="Assets\PlayerAppearance.cs" />
+     <Compile Include="Assets\PlayerManager.cs" />
      <Compile Include="Assets\PlayerNameInputField.cs" />
      <Compile Include="Assets\ShipAttach.cs" />
      <None Include="Assets\Photon Unity Networking\link.xml" />
