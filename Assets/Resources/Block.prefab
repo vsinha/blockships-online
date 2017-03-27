@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 212533249439569916}
   - component: {fileID: 50949660873990748}
   - component: {fileID: 61810380508420026}
-  - component: {fileID: 114946130689140680}
   - component: {fileID: 114142348201543310}
   m_Layer: 0
   m_Name: Block
@@ -90,17 +89,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DetachThrust: 50
---- !u!114 &114946130689140680
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1520862639452344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4d9c0d55a5d8c943ad18375e078bee0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  Parent: {fileID: 0}
+  IsAttached: 0
+  IndexRelativeToParent: 0
 --- !u!212 &212533249439569916
 SpriteRenderer:
   m_ObjectHideFlags: 1

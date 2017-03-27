@@ -17,9 +17,9 @@ public class Attachable : MonoBehaviour {
     public float DetachThrust = 50.0f;
 
     // the blockattach which initialized first is the core of the ship
-    private static Attachable Core = null;
+    private Attachable Core = null;
 
-    private Rigidbody rb;
+    private Rigidbody2D rb;
 
     private Stack<Attachable> history = new Stack<Attachable>();
 
@@ -38,16 +38,19 @@ public class Attachable : MonoBehaviour {
 
     public bool IsAttached;
     public int IndexRelativeToParent; // where am i attached to my parent block 
+    private bool attachedInLastTick;
 
     // Use this for initialization
     void Start() {
-        if (Core == null) {
+        if (Core == null && this.tag == "Player") {
             Core = this;
             this.isCore = true;
+            this.IsAttached = true;
         }
 
         this.IsAttached = false;
         this.IndexRelativeToParent = 0; // initialize.. to prevent null ref
+        this.rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -55,13 +58,23 @@ public class Attachable : MonoBehaviour {
         if (this.isCore && Input.GetKeyDown("space")) {
             DetachMostRecentBlock();
         }
+
+
+        // do this last
+        this.attachedInLastTick = false;
     }
 
     void OnCollisionEnter2D(Collision2D coll) {
+        if (this.isCore == false && this.IsAttached == false && this.attachedInLastTick == false) {
+            // if we're a free-floating object that's not the ship's core
+            // then don't handle collisions
+            Debug.Log("ignoring collision");
+            return;
+        }
 
         if (coll.gameObject.tag == "Block") {
 
-            Debug.Log("collided with block");
+            Debug.Log(this.gameObject.name + " has collided with block " + coll.gameObject.name);
 
             // what attach direction are we closest to? (within a tolerance)
             Vector3 attachPoint = ClosestAttachPoint(coll.gameObject);
@@ -72,71 +85,85 @@ public class Attachable : MonoBehaviour {
                 return;
             }
 
-            Attach(index, coll.gameObject);
+            Attachable block = coll.gameObject.GetComponent<Attachable>();
+
+            if (block == null) {
+                Debug.LogError("No Attachable component on the collided block");
+            }
+
+            AttachChild(index, block, this.Core);
         }
     }
 
-    void AttachChild(Attachable block)
+    void AttachChild(int index, Attachable block, Attachable core)
     {
+        // check if the attempted attach is valid
+        if (index < 0) {
+            Debug.Log("Invalid attach point");
+            return;
+        }
+        if (attachedBlocks[index] != null) {
+            // there's already a block in that spot!
+            return;
+        }
 
-    }
+        // update the new child
+        block.Core = core;
+        block.Parent = this;
+        block.IsAttached = true;
+        block.rb.isKinematic = true;
+        block.IndexRelativeToParent = index;
+        block.attachedInLastTick = true; // protect against handling the collision twice
 
-    void AttachParent(Attachable block)
-    {
+        // move it to the correct position
+        block.transform.position = this.transform.position - (Vector3)ValidAttachPoints[index];
+        block.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        block.transform.SetParent(this.transform);
 
+        // store it
+        this.attachedBlocks[index] = block;
+        Debug.Log("pushing " + block.gameObject.name + " onto attach stack (" 
+                    + Core.history.Count + ")");
+        Core.history.Push(block);
     }
 
     // only performed by the core in Update()
     private void DetachMostRecentBlock()
     {
         if (!isCore) {
+            // only call this function if we're the ship's core
             return;
         }
-
         if (Core.history.Count == 0) {
             return;
         }
-        var mostRecentAddition = Core.history.Pop();
 
+        Debug.Log("detaching from stack of length: " + Core.history.Count);
+
+        var mostRecentAddition = Core.history.Pop();
+        Debug.Log("detaching: " + mostRecentAddition.gameObject.name);
         mostRecentAddition.DetachFromParent();
     }
 
     private void DetachFromParent()
     {
-        this.Parent.DetachChildAtIndex(this.IndexRelativeToParent);
+        if (this.isCore) {
+            return;
+        }
+
+        this.Parent.attachedBlocks[IndexRelativeToParent] = null;
         this.transform.SetParent(null);
         this.Parent = null;
-        this.gameObject.GetComponent<BlockBehavior>().SetDetached();
-        this.GetComponent<Rigidbody2D>().AddForce(ValidAttachPoints[IndexRelativeToParent] * DetachThrust);
+
+        this.Core = null;
+
+        this.rb.isKinematic = false;
+        this.rb.AddForce(ValidAttachPoints[IndexRelativeToParent] * -1 * DetachThrust);
+
         this.IndexRelativeToParent = -1;
-    }
+        this.IsAttached = false;
 
-    void DetachChildAtIndex(int index)
-    {
-        attachedBlocks[index] = null;
-    }
-
-    void Attach(int index, GameObject block) {
-
-        block.GetComponent<BlockBehavior>().SetAttached(this.gameObject);
-
-        if (index < 0) {
-            Debug.Log("Invalid attach point");
-            return;
-        }
-
-        if (attachedBlocks[index] != null) {
-            // there's already a block in that spot!
-            return;
-        }
-
-        Core.history.Push(attachedBlock);
-        attachedBlocks[index] = block;
-
-        // snap to that position
-        block.transform.position = this.transform.position - (Vector3)ValidAttachPoints[index];
-        block.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        block.transform.SetParent(this.transform);
+        Debug.Log("detached block: " + this.gameObject.name);
     }
 
     Vector2 ClosestAttachPoint(GameObject block) {
