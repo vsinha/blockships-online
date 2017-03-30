@@ -14,12 +14,14 @@ public class Attachable : MonoBehaviour {
 	 * 
 	 */
 
-    public float DetachThrust = 50.0f;
+    private float DetachThrust = 300.0f;
+	private float boxColliderDelay = 0.25f;
 
     // the blockattach which initialized first is the core of the ship
     private Attachable Core = null;
 
     private Rigidbody2D rb;
+	private BoxCollider2D boxCollider;
 
     private Stack<Attachable> history = new Stack<Attachable>();
 
@@ -50,15 +52,16 @@ public class Attachable : MonoBehaviour {
 
         this.IsAttached = false;
         this.IndexRelativeToParent = 0; // initialize.. to prevent null ref
-        this.rb = GetComponent<Rigidbody2D>();
+        
+		this.rb = GetComponent<Rigidbody2D>();
+		this.boxCollider = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
     void Update() {
-        if (this.isCore && Input.GetKeyDown("space")) {
+        if (this.isCore && Input.anyKey && Input.GetKeyDown("space")) {
             DetachMostRecentBlock();
         }
-
 
         // do this last
         this.attachedInLastTick = false;
@@ -102,8 +105,7 @@ public class Attachable : MonoBehaviour {
             Debug.Log("Invalid attach point");
             return;
         }
-        if (attachedBlocks[index] != null) {
-            // there's already a block in that spot!
+		if (attachedBlocks[index] != null || block.IsAttached ) {
             return;
         }
 
@@ -117,7 +119,6 @@ public class Attachable : MonoBehaviour {
 
         // move it to the correct position
         block.transform.position = this.transform.position - (Vector3)ValidAttachPoints[index];
-        block.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         block.transform.SetParent(this.transform);
 
         // store it
@@ -141,7 +142,6 @@ public class Attachable : MonoBehaviour {
         Debug.Log("detaching from stack of length: " + Core.history.Count);
 
         var mostRecentAddition = Core.history.Pop();
-        Debug.Log("detaching: " + mostRecentAddition.gameObject.name);
         mostRecentAddition.DetachFromParent();
     }
 
@@ -151,20 +151,32 @@ public class Attachable : MonoBehaviour {
             return;
         }
 
-        this.Parent.attachedBlocks[IndexRelativeToParent] = null;
-        this.transform.SetParent(null);
-        this.Parent = null;
+		Debug.Log ("nulling parent's:" + this.IndexRelativeToParent);
+        this.Parent.attachedBlocks[this.IndexRelativeToParent] = null;
 
+		this.boxCollider.enabled = false;
+
+		this.transform.SetParent(null);
+        this.Parent = null;
         this.Core = null;
+        this.IsAttached = false;
 
         this.rb.isKinematic = false;
         this.rb.AddForce(ValidAttachPoints[IndexRelativeToParent] * -1 * DetachThrust);
 
-        this.IndexRelativeToParent = -1;
-        this.IsAttached = false;
+		this.IndexRelativeToParent = -1;
+
+		StartCoroutine(EnableColliderAfterDelay(boxColliderDelay));
 
         Debug.Log("detached block: " + this.gameObject.name);
     }
+
+    // prevent recollision
+    IEnumerator EnableColliderAfterDelay (float sec)
+	{
+		yield return new WaitForSeconds(sec);
+		this.boxCollider.enabled = true;
+	}
 
     Vector2 ClosestAttachPoint(GameObject block) {
 
