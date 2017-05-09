@@ -13,42 +13,12 @@ public class GameManager : Photon.PunBehaviour {
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
         DontDestroyOnLoad(this.gameObject);
+
+        playerPrefab = (GameObject)Resources.Load("Player", typeof(GameObject)) as GameObject;
     }
 
 
     void Start() {
-        InstantiatePlayerFromPrefab();
-    }
-
-    private void InstantiatePlayerFromPrefab() {
-        if (playerPrefab == null) {
-            Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
-            return;
-        }
-
-        if (!PhotonNetwork.connected) {
-            Debug.Log("No photon network");
-
-            if (PlayerManager.LocalPlayerInstance == null) {
-                Instantiate(this.playerPrefab, spawns[0].position, Quaternion.identity);
-            }
-            return;
-        }
-
-        if (photonView.isMine) {
-            Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
-
-            var playerIndex = PhotonNetwork.playerList.Length - 1; // includes count of our own player
-
-            if (playerIndex > spawns.Length) { // just in case
-                playerIndex = playerIndex % spawns.Length;
-            }
-
-            // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-            var player = PhotonNetwork.Instantiate(this.playerPrefab.name, spawns[playerIndex].position, Quaternion.identity, 0);
-            var appearance = player.GetComponent<PlayerAppearance>();
-            appearance.SetPlayerIndex(playerIndex);
-        }
     }
 
     /// <summary>
@@ -88,4 +58,18 @@ public class GameManager : Photon.PunBehaviour {
         Debug.Log("PhotonNetwork : Loading Level : " + PhotonNetwork.room.PlayerCount);
         PhotonNetwork.LoadLevel("GameRoom");
     }
+
+	void OnJoinedRoom () {
+		Debug.Log ("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene ().name);
+
+		var playerIndex = PhotonNetwork.playerList.Length - 1; // includes count of our own player
+
+		if (playerIndex > spawns.Length) { // just in case
+			playerIndex = playerIndex % spawns.Length;
+		}
+
+		var player = PhotonNetwork.Instantiate (this.playerPrefab.name, spawns [playerIndex].position, Quaternion.identity, 0);
+		var appearance = player.GetComponent<PlayerAppearance>();
+		appearance.SetPlayerIndex(playerIndex);
+	}
 }

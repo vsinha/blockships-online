@@ -14,9 +14,7 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable {
     //[Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
     public static GameObject LocalPlayerInstance;
 
-
     void Awake() {
-
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
         DontDestroyOnLoad(this.gameObject);
@@ -51,30 +49,19 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable {
         InputMovement();
     }
 
-    // in an "observed" script:
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-        if (stream.isWriting) {
-            Vector3 pos = transform.localPosition;
-            stream.Serialize(ref pos);
-        } else {
-            Vector3 pos = Vector3.zero;
-            stream.Serialize(ref pos);  // pos gets filled-in. must be used somewhere
-        }
-    }
-
     private void InputMovement() {
 		var move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
 		transform.position += move * speed * Time.deltaTime;
 	}
 
-    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
         if (stream.isWriting) {
-            // We own this player: send the others our data
-            stream.SendNext(IsFiring);
+            Vector3 pos = transform.localPosition;
+            stream.Serialize(ref pos);
         } else {
-            // Network player, receive data
-            this.IsFiring = (bool)stream.ReceiveNext();
+            Vector3 pos = Vector3.zero;
+            stream.Serialize(ref pos);  // pos gets filled-in. must be used somewhere
         }
     }
 }
