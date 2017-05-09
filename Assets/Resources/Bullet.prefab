@@ -147,8 +147,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114909645888546144}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 2
-  instantiationId: 2
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114833457154500472
@@ -163,6 +163,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {x: 0, y: 0, z: 0}
+  speed: 0.1
+  maxLifetime: 100
+  lifetime: 0
 --- !u!114 &114909645888546144
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -175,6 +178,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {x: 0, y: 0, z: 0}
+  speed: 0.1
+  maxLifetime: 100
+  lifetime: 0
 --- !u!212 &212572533028996302
 SpriteRenderer:
   m_ObjectHideFlags: 1

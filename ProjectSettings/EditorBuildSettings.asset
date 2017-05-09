@@ -7,9 +7,13 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: Assets/Scenes/Scene11.unity
+    guid: 00000000000000000000000000000000
   - enabled: 0
     path: Assets/Scenes/Scene1.unity
-  - enabled: 1
+    guid: 00000000000000000000000000000000
+  - enabled: 0
     path: Assets/Scenes/Launcher.unity
-  - enabled: 1
+    guid: 00000000000000000000000000000000
+  - enabled: 0
     path: Assets/Scenes/GameRoom.unity
+    guid: 00000000000000000000000000000000
