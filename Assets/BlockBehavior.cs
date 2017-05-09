@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class BlockBehavior: MonoBehaviour  {
 
+	public Rigidbody2D rb;
+
+	public void Start() {
+		rb = this.GetComponent<Rigidbody2D>();
+	}
+
 	public virtual int PowerConsumption { 
 		get { return 1; }
 	}
