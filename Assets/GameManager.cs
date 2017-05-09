@@ -17,8 +17,8 @@ public class GameManager : Photon.PunBehaviour {
         playerPrefab = (GameObject)Resources.Load("Player", typeof(GameObject)) as GameObject;
     }
 
-
     void Start() {
+		SpawnPlayer();
     }
 
     /// <summary>
@@ -62,14 +62,28 @@ public class GameManager : Photon.PunBehaviour {
 	void OnJoinedRoom () {
 		Debug.Log ("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene ().name);
 
-		var playerIndex = PhotonNetwork.playerList.Length - 1; // includes count of our own player
+		//SpawnPlayer();
+	}
 
-		if (playerIndex > spawns.Length) { // just in case
-			playerIndex = playerIndex % spawns.Length;
+	void SpawnPlayer() {
+
+		if (PlayerManager.LocalPlayerInstance==null)
+		{
+		    Debug.Log("We are Instantiating LocalPlayer from "+Application.loadedLevelName);
+		    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+			var playerIndex = PhotonNetwork.playerList.Length - 1; // includes count of our own player
+
+			if (playerIndex > spawns.Length) { // just in case
+				playerIndex = playerIndex % spawns.Length;
+			}
+
+			var player = PhotonNetwork.Instantiate (this.playerPrefab.name, spawns [playerIndex].position, Quaternion.identity, 0);
+
+			//var appearance = player.GetComponent<PlayerAppearance>();
+			//appearance.SetPlayerIndex(playerIndex);
+		}else{
+		    Debug.Log("Ignoring scene load for "+Application.loadedLevelName);
+		    return;
 		}
-
-		var player = PhotonNetwork.Instantiate (this.playerPrefab.name, spawns [playerIndex].position, Quaternion.identity, 0);
-		var appearance = player.GetComponent<PlayerAppearance>();
-		appearance.SetPlayerIndex(playerIndex);
 	}
 }
