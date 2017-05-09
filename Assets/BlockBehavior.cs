@@ -2,29 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockBehavior : MonoBehaviour {
-    private Rigidbody2D rb;
-    private RigidbodyConstraints2D originalConstraints;
+public class BlockBehavior: MonoBehaviour  {
 
-    // Use this for initialization
-    void Start () {
-        rb = GetComponent<Rigidbody2D>();
-        originalConstraints = rb.constraints;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	public virtual int PowerConsumption { 
+		get { return 1; }
 	}
 
-    public void SetAttached(GameObject parent) {
-        rb.isKinematic = true;
-        //rb.constraints = RigidbodyConstraints2D.FreezeAll;
-    }
-    
-    public void SetDetached() {
-        rb.isKinematic = false;
-        //rb.WakeUp();
-        //rb.constraints = originalConstraints;
-    }
+	public virtual int Mass { 
+		get { return 1; }  
+	}
+
+	public virtual void RotateLeft() {
+	}
+
+	public virtual void RotateRight() { 
+	}
+
+	public virtual void Fire() {
+	}
+}
+
+public class ThrustBlock: BlockBehavior {
+	public int mass = -2;
+	int Mass {
+		get { return mass; }
+	}
+}
+
+public class BatteryBlock: BlockBehavior {
+	public int power = 4;
+ 	int PowerConsumption {
+		get {
+			return -power;
+		}
+	}
+}
+
+
+public struct Blocks {
+	public enum Types {
+		ThrustBlock,
+		BatteryBlock,
+		GunBlock
+	}
 }

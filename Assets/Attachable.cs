@@ -59,9 +59,6 @@ public class Attachable : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (this.isCore && Input.anyKey && Input.GetKeyDown("space")) {
-            DetachMostRecentBlock();
-        }
 
         // do this last
         this.attachedInLastTick = false;
@@ -128,8 +125,8 @@ public class Attachable : MonoBehaviour {
         Core.history.Push(block);
     }
 
-    // only performed by the core in Update()
-    private void DetachMostRecentBlock()
+    // only performed by the core
+    public void DetachMostRecentBlock()
     {
         if (!isCore) {
             // only call this function if we're the ship's core

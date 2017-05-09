@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CameraWork))]
-public class PlayerManager : Photon.MonoBehaviour, IPunObservable {
+public class ShipBehavior : Photon.MonoBehaviour, IPunObservable {
 
     private PhotonView playerView;
     private bool IsFiring;
@@ -14,13 +15,17 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable {
     //[Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
     public static GameObject LocalPlayerInstance;
 
+    private List<BlockBehavior> ChildBlocks;
+
+    private Attachable attachable;
+
     void Awake() {
 
 		// #Important
 		// used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
 		if (photonView.isMine)
 		{
-		    PlayerManager.LocalPlayerInstance = this.gameObject;
+		    ShipBehavior.LocalPlayerInstance = this.gameObject;
 		}
 
         // #Critical
@@ -33,8 +38,10 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable {
 		// #Important
 		// used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
 		if (photonView.isMine || !PhotonNetwork.connected) {
-			PlayerManager.LocalPlayerInstance = this.gameObject;
+			ShipBehavior.LocalPlayerInstance = this.gameObject;
 		}
+
+		attachable = GetComponent<Attachable>();
 
 		StartCameraWork();
     }
@@ -59,13 +66,30 @@ public class PlayerManager : Photon.MonoBehaviour, IPunObservable {
             return;
         }
 
+        ChildBlocks = GetComponentsInChildren<BlockBehavior>().ToList();
         InputMovement();
+        InputFiring();
+        InputDetach();
     }
 
     private void InputMovement() {
 		var move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
 		transform.position += move * speed * Time.deltaTime;
+	}
+
+	private void InputFiring() {
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			foreach (BlockBehavior b in ChildBlocks) {
+				b.Fire();
+			}
+		}
+	}
+
+	private void InputDetach() {
+		if (Input.GetKeyDown(KeyCode.F)) {
+            attachable.DetachMostRecentBlock();
+        }
 	}
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {

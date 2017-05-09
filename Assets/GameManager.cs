@@ -67,17 +67,21 @@ public class GameManager : Photon.PunBehaviour {
 
 	void SpawnPlayer() {
 
-		if (PlayerManager.LocalPlayerInstance==null)
-		{
-		    Debug.Log("We are Instantiating LocalPlayer from "+Application.loadedLevelName);
-		    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+		if (ShipBehavior.LocalPlayerInstance == null) {
+			Debug.Log ("We are Instantiating LocalPlayer from " + Application.loadedLevelName);
+			// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
 			var playerIndex = PhotonNetwork.playerList.Length - 1; // includes count of our own player
 
 			if (playerIndex > spawns.Length) { // just in case
 				playerIndex = playerIndex % spawns.Length;
 			}
 
-			var player = PhotonNetwork.Instantiate (this.playerPrefab.name, spawns [playerIndex].position, Quaternion.identity, 0);
+			GameObject player;
+			if (PhotonNetwork.connected) {
+				player = PhotonNetwork.Instantiate (this.playerPrefab.name, spawns [playerIndex].position, Quaternion.identity, 0);
+			} else {
+				player = Instantiate(this.playerPrefab, spawns [playerIndex].position, Quaternion.identity);
+			}	
 
 			//var appearance = player.GetComponent<PlayerAppearance>();
 			//appearance.SetPlayerIndex(playerIndex);
