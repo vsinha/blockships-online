@@ -28,22 +28,6 @@ public class BlockBehavior: MonoBehaviour  {
 	}
 }
 
-public class ThrustBlock: BlockBehavior {
-	public int mass = -2;
-	int Mass {
-		get { return mass; }
-	}
-}
-
-public class BatteryBlock: BlockBehavior {
-	public int power = 4;
- 	int PowerConsumption {
-		get {
-			return -power;
-		}
-	}
-}
-
 
 public struct Blocks {
 	public enum Types {

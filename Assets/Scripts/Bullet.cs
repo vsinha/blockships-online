@@ -10,13 +10,16 @@ public class Bullet : Photon.MonoBehaviour {
 
 	public int maxLifetime = 1000;
 	public int lifetime = 0;
+
+	private Rigidbody2D rb;
+
+	public void Shoot(Vector3 direction) {
+		rb = GetComponent<Rigidbody2D> ();
+
+		this.rb.velocity = speed * direction;
+	}
 	
-	// Update is called once per frame
-	void FixedUpdate() {
-
-		Debug.Log(speed * movement);
-		this.transform.position += speed * movement;
-
+	void Update() {
 		lifetime += 1;
 		if (lifetime > maxLifetime) {
 			Destroy (this.gameObject);

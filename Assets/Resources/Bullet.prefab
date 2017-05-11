@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114253844256387794}
   - component: {fileID: 114833457154500472}
   - component: {fileID: 114909645888546144}
+  - component: {fileID: 50231633829468472}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -45,6 +46,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &50231633829468472
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1540959005210320}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!58 &58551935506705528
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -163,7 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {x: 0, y: 0, z: 0}
-  speed: 0.1
+  speed: 3
   maxLifetime: 100
   lifetime: 0
 --- !u!114 &114909645888546144
@@ -178,7 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {x: 0, y: 0, z: 0}
-  speed: 0.1
+  speed: 50
   maxLifetime: 100
   lifetime: 0
 --- !u!212 &212572533028996302

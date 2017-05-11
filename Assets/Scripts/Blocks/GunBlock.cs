@@ -18,12 +18,10 @@ public class GunBlock : BlockBehavior {
 
 		Bullet b;
 		if (PhotonNetwork.connected) {
-			var obj = PhotonNetwork.Instantiate ("Bullet", this.transform.position, Quaternion.identity, 1);
+			var obj = PhotonNetwork.Instantiate ("Bullet", this.transform.position, this.transform.rotation, 1);
 			b = obj.GetComponent<Bullet>();
 		} else {
-			b = Instantiate (bulletPrefab, this.transform.position, Quaternion.identity);
+			b = Instantiate (bulletPrefab, this.transform.position, this.transform.rotation);
 		}
-
-		b.movement = this.transform.right + (Vector3)base.rb.velocity;
 	}
 }
